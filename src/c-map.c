@@ -1,5 +1,13 @@
 #include "c-map.h"
 
+size_t quadraticProbe(size_t hash, size_t attempt, size_t size) {
+    return (hash + attempt * attempt) % size;
+}
+
+size_t hashFunction(int key, size_t size) {
+    return key % size;
+}
+
 StringMap *newStringMap(size_t size, float loadFactor) {
     StringMap *map = (StringMap*) malloc(sizeof(StringMap));
     if (map == NULL) {

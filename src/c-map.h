@@ -34,4 +34,8 @@ StringMap *newStringMap(size_t size, float loadFactor);
 
 IntMap *newIntMap(size_t size, float loadFactor);
 
+size_t quadraticProbe(size_t hash, size_t attempt, size_t size);
+
+size_t hashFunction(int key, size_t size);
+
 #endif

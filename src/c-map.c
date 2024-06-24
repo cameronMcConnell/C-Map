@@ -177,3 +177,19 @@ int stringMapGet(StringMap *map, string *key) {
 
     return -1;
 }
+
+int intMapGet(IntMap *map, int key) {
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
+
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        if (map->entries[index].key == key) {
+            return map->entries[index].value;
+        }
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
+    }
+
+    return -1;
+}

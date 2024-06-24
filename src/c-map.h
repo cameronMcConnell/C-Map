@@ -40,20 +40,20 @@ size_t hashFunction(int key, size_t size);
 
 int stringToInt(string *str);
 
-void resizeStringMap();
+void resizeStringMap(StringMap *map);
 
-void stringMapInsert();
+void stringMapInsert(StringMap *map, string value);
 
-void stringMapGet();
+void stringMapGet(StringMap *map, int key);
 
-void stringMapDelete();
+void stringMapDelete(StringMap *map, int key);
 
-void resizeIntMap();
+void resizeIntMap(IntMap *map);
 
-void intMapInsert();
+void intMapInsert(IntMap *map, int value);
 
-void intMapGet();
+void intMapGet(IntMap *map, int key);
 
-void intMapDelete();
+void intMapDelete(IntMap *map, int key);
 
 #endif

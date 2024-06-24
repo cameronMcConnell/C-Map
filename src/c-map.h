@@ -5,8 +5,8 @@
 #include "c-string.h"
 
 typedef struct {
-    int key;
-    string *value;
+    string *key;
+    int value;
     int isOccupied;
 } StringMapEntry;
 
@@ -42,9 +42,9 @@ int stringToInt(string *str);
 
 void resizeStringMap(StringMap *map);
 
-void stringMapInsert(StringMap *map, string *value);
+void stringMapInsert(StringMap *map, string *key, int value);
 
-string *stringMapGet(StringMap *map, string *key);
+int stringMapGet(StringMap *map, string *key);
 
 void stringMapDelete(StringMap *map, int key);
 

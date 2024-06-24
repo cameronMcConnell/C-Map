@@ -91,3 +91,35 @@ void resizeStringMap(StringMap *map) {
     map->entries = newEntries;
     map->size = newSize;
 }
+
+void resizeIntMap(IntMap *map) {
+    size_t newSize = map->size * 2;
+    IntMapEntry *newEntries = (IntMapEntry*) malloc(newSize * sizeof(IntMapEntry));
+    if (newEntries == NULL) {
+        return;
+    }
+
+    for (size_t i = 0; i < newSize; i++) {
+        newEntries->isOccupied = 0;
+    }
+
+    for (size_t i = 0; i < map->size; i++) {
+        if (map->entries[i].isOccupied) {
+            int key = map->entries[i].key;
+            int value = map->entries[i].value;
+            size_t hash = hashFunction(key, newSize);
+            size_t attempt = 0;
+            size_t index = quadraticProbe(hash, attempt, newSize);
+            while (newEntries[index].isOccupied) {
+                attempt += 1;
+            }
+            newEntries[index].key = key;
+            newEntries[index].value = value;
+            newEntries[index].isOccupied = 1;
+        }
+    }
+
+    free(map->entries);
+    map->entries = newEntries;
+    map->size = newSize;
+}

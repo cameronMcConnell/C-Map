@@ -46,7 +46,7 @@ void stringMapInsert(StringMap *map, string *key, int value);
 
 int stringMapGet(StringMap *map, string *key);
 
-void stringMapDelete(StringMap *map, int key);
+void stringMapDelete(StringMap *map, string *key);
 
 void resizeIntMap(IntMap *map);
 

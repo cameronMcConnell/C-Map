@@ -135,6 +135,7 @@ void stringMapInsert(StringMap *map, string *key, int value) {
     size_t index = quadraticProbe(hash, attempt, map->size);
     while (map->entries[index].isOccupied) {
         attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
     }
     
     map->entries[index].key = key;
@@ -154,6 +155,7 @@ void intMapInsert(IntMap *map, int key, int value) {
     size_t index = quadraticProbe(hash, attempt, map->size);
     while (map->entries[index].isOccupied) {
         attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
     }
 
     map->entries[index].key = key;
@@ -205,9 +207,23 @@ void stringMapDelete(StringMap *map, string *key) {
             map->count--;
             return;
         }
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
     }
 } 
 
 void intMapDelete(IntMap *map, int key) {
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
 
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        if (map->entries[index].key == key) {
+            map->entries[index].isOccupied = 0;
+            map->count--;
+            return;
+        }
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
+    }
 }

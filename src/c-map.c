@@ -168,7 +168,7 @@ int stringMapGet(StringMap *map, string *key) {
 
     size_t index = quadraticProbe(hash, attempt, map->size);
     while (map->entries[index].isOccupied) {
-        if (compare(map->entries[index].key, key)) {
+        if (compare(map->entries[index].key, key) == 1) {
             return map->entries[index].value;
         }
         attempt++;
@@ -192,4 +192,22 @@ int intMapGet(IntMap *map, int key) {
     }
 
     return -1;
+}
+
+void stringMapDelete(StringMap *map, string *key) {
+    size_t hash = hashFunction(stringToInt(key), map->size);
+    size_t attempt = 0;
+
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        if (compare(map->entries[index].key, key) == 1) {
+            map->entries[index].isOccupied = 0;
+            map->count--;
+            return;
+        }
+    }
+} 
+
+void intMapDelete(IntMap *map, int key) {
+
 }

@@ -44,15 +44,15 @@ void resizeStringMap(StringMap *map);
 
 void stringMapInsert(StringMap *map, string *value);
 
-void stringMapGet(StringMap *map, int key);
+string *stringMapGet(StringMap *map, string *key);
 
 void stringMapDelete(StringMap *map, int key);
 
 void resizeIntMap(IntMap *map);
 
-void intMapInsert(IntMap *map, int value);
+void intMapInsert(IntMap *map, int key, int value);
 
-void intMapGet(IntMap *map, int key);
+int intMapGet(IntMap *map, int key);
 
 void intMapDelete(IntMap *map, int key);
 

@@ -135,9 +135,28 @@ void stringMapInsert(StringMap *map, string *value) {
     
     size_t index = quadraticProbe(hash, attempt, map->size);
     while (map->entries[index].isOccupied) {
-        attempt += 1;
+        attempt++;
     }
     
+    map->entries[index].key = key;
+    map->entries[index].value = value;
+    map->entries[index].isOccupied = 1;
+    map->count++;
+}
+
+void intMapInsert(IntMap *map, int key, int value) {
+    if ((float) map->count / map->size >= map->loadFactor) {
+        resizeIntMap(map);
+    }
+
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
+
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        attempt++;
+    }
+
     map->entries[index].key = key;
     map->entries[index].value = value;
     map->entries[index].isOccupied = 1;

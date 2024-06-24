@@ -8,6 +8,14 @@ size_t hashFunction(int key, size_t size) {
     return key % size;
 }
 
+int stringToInt(string *str) {
+    int result = 0;
+    for (size_t i = 0; i < str->length; i++) {
+        result += (int) str->str[i];
+    }
+    return result;
+}
+
 StringMap *newStringMap(size_t size, float loadFactor) {
     StringMap *map = (StringMap*) malloc(sizeof(StringMap));
     if (map == NULL) {

@@ -38,4 +38,22 @@ size_t quadraticProbe(size_t hash, size_t attempt, size_t size);
 
 size_t hashFunction(int key, size_t size);
 
+int stringToInt(string *str);
+
+void resizeStringMap();
+
+void stringMapInsert();
+
+void stringMapGet();
+
+void stringMapDelete();
+
+void resizeIntMap();
+
+void intMapInsert();
+
+void intMapGet();
+
+void intMapDelete();
+
 #endif

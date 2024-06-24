@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
-#include "c-map.h"
-#include "c-string.h"
+#include "lib/c-map.h"
+#include "lib/c-string.h"
 
 void testIntMap() {
     IntMap *map = newIntMap(5, 0.75);

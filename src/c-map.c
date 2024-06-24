@@ -74,7 +74,7 @@ void resizeStringMap(StringMap *map) {
     for (size_t i = 0; i < map->size; i++) {
         if (map->entries[i].isOccupied) {
             int key = map->entries[i].key;
-            string value = map->entries[i].value;
+            string *value = map->entries[i].value;
             size_t hash = hashFunction(key, newSize);
             size_t attempt = 0;
             size_t index = quadraticProbe(hash, attempt, newSize);
@@ -122,4 +122,24 @@ void resizeIntMap(IntMap *map) {
     free(map->entries);
     map->entries = newEntries;
     map->size = newSize;
+}
+
+void stringMapInsert(StringMap *map, string *value) {
+    if ((float) map->count / map->size >= map->loadFactor) {
+        resizeStringMap(map);
+    }
+
+    int key = stringToInt(value);
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
+    
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        attempt += 1;
+    }
+    
+    map->entries[index].key = key;
+    map->entries[index].value = value;
+    map->entries[index].isOccupied = 1;
+    map->count++;
 }

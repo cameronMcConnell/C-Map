@@ -6,7 +6,7 @@
 
 typedef struct {
     int key;
-    string value;
+    string *value;
     int isOccupied;
 } StringMapEntry;
 
@@ -42,7 +42,7 @@ int stringToInt(string *str);
 
 void resizeStringMap(StringMap *map);
 
-void stringMapInsert(StringMap *map, string value);
+void stringMapInsert(StringMap *map, string *value);
 
 void stringMapGet(StringMap *map, int key);
 

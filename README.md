@@ -33,6 +33,11 @@ Creating a new StringMap
 StringMap *newStringMap(size_t size, float loadFactor);
 ```
 
+Freeing a StringMap
+```c
+void freeStringMap(StringMap *map);
+```
+
 Inserting a key-value pair
 ```c
 void stringMapInsert(StringMap *map, string *key, int value);
@@ -53,6 +58,11 @@ void stringMapDelete(StringMap *map, string *key);
 Creating a new IntMap
 ```c
 IntMap *newIntMap(size_t size, float loadFactor);
+```
+
+Freeing an IntMap
+```c
+void freeIntMap(IntMap *map);
 ```
 
 Inserting a key-value pair
@@ -86,8 +96,7 @@ int main() {
     printf("Value for key 1: %d\n", intMapGet(intMap, 1));
     intMapDelete(intMap, 1);
     printf("Value for key 1 after deletion: %d\n", intMapGet(intMap, 1));
-    free(intMap->entries);
-    free(intMap);
+    freeIntMap(intMap);
 
     // Create a new StringMap
     StringMap *stringMap = newStringMap(5, 0.75);
@@ -97,8 +106,7 @@ int main() {
     stringMapDelete(stringMap, &key1);
     printf("Value for key 'key1' after deletion: %d\n", stringMapGet(stringMap, &key1));
     freeString(&key1);
-    free(stringMap->entries);
-    free(stringMap);
+    freeStringMap(stringMap);
 
     return 0;
 }

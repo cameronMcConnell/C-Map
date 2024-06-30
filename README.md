@@ -26,31 +26,58 @@ Include the c-map.h header in your C project:
 
 ## API
 
-### StringMap
+### StringToIntMap
 
-Creating a new StringMap
+Creating a new StringToIntMap
 ```c
-StringMap *newStringMap(size_t size, float loadFactor);
+StringToIntMap *newStringToIntMap(size_t size, float loadFactor);
 ```
 
-Freeing a StringMap
+Freeing a StringToIntMap
 ```c
-void freeStringMap(StringMap *map);
+void freeStringMap(StringToIntMap *map);
 ```
 
 Inserting a key-value pair
 ```c
-void stringMapInsert(StringMap *map, string *key, int value);
+void stringMapInsert(StringToIntMap *map, string *key, int value);
 ```
 
 Retrieving a value by key
 ```c
-int stringMapGet(StringMap *map, string *key);
+int stringMapGet(StringToIntMap *map, string *key);
 ```
 
 Deleting a key-value pair
 ```c
-void stringMapDelete(StringMap *map, string *key);
+void stringMapDelete(StringToIntMap *map, string *key);
+```
+
+### IntToStringMap
+
+Creating a new StringToIntMap
+```c
+IntToStringMap *newIntToStringMap(size_t size, float loadFactor);
+```
+
+Freeing a IntToStringMap
+```c
+void freeStringMap(IntToStringMap *map);
+```
+
+Inserting a key-value pair
+```c
+void stringMapInsert(IntToStringMap *map, string *key, int value);
+```
+
+Retrieving a value by key
+```c
+int stringMapGet(IntToStringMap *map, string *key);
+```
+
+Deleting a key-value pair
+```c
+void stringMapDelete(IntToStringMap *map, string *key);
 ```
 
 ### IntMap

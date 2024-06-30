@@ -16,8 +16,8 @@ int stringToInt(string *str) {
     return result;
 }
 
-StringMap *newStringMap(size_t size, float loadFactor) {
-    StringMap *map = (StringMap*) malloc(sizeof(StringMap));
+StringToIntMap *newStringToIntMap(size_t size, float loadFactor) {
+    StringToIntMap *map = (StringToIntMap*) malloc(sizeof(StringToIntMap));
     if (map == NULL) {
         return NULL;
     }
@@ -25,7 +25,29 @@ StringMap *newStringMap(size_t size, float loadFactor) {
     map->size = size;
     map->loadFactor = loadFactor;
     map->count = 0;
-    map->entries = (StringMapEntry*) malloc(map->size * sizeof(StringMapEntry));
+    map->entries = (StringToIntMapEntry*) malloc(map->size * sizeof(StringToIntMapEntry));
+    if (map->entries == NULL) {
+        free(map);
+        return NULL;
+    }
+
+    for (size_t i = 0; i < map->size; i++) {
+        map->entries[i].isOccupied = 0;
+    }
+
+    return map;
+}
+
+IntToStringMap *newIntToStringMap(size_t size, float loadFactor) {
+    IntToStringMap *map = (IntToStringMap*) malloc(sizeof(IntToStringMap));
+    if (map == NULL) {
+        return NULL;
+    }
+
+    map->size = size;
+    map->loadFactor = loadFactor;
+    map->count = 0;
+    map->entries = (IntToStringMapEntry*) malloc(map->size * sizeof(IntToStringMapEntry));
     if (map->entries == NULL) {
         free(map);
         return NULL;
@@ -60,9 +82,24 @@ IntMap *newIntMap(size_t size, float loadFactor) {
     return map;
 }
 
-void resizeStringMap(StringMap *map) {
+void freeStringToIntMap(StringToIntMap *map) {
+    free(map->entries);
+    free(map);
+}
+
+void freeIntToStringMap(IntToStringMap *map) {
+    free(map->entries);
+    free(map);
+}
+
+void freeIntMap(IntMap *map) {
+    free(map->entries);
+    free(map);
+}
+
+void resizeStringToIntMap(StringToIntMap *map) {
     size_t newSize = map->size * 2;
-    StringMapEntry *newEntries = (StringMapEntry*) malloc(newSize * sizeof(StringMapEntry));
+    StringToIntMapEntry *newEntries = (StringToIntMapEntry*) malloc(newSize * sizeof(StringToIntMapEntry));
     if (newEntries == NULL) {
         return;
     }
@@ -76,6 +113,38 @@ void resizeStringMap(StringMap *map) {
             string *key = map->entries[i].key;
             int value = map->entries[i].value;
             size_t hash = hashFunction(stringToInt(key), newSize);
+            size_t attempt = 0;
+            size_t index = quadraticProbe(hash, attempt, newSize);
+            while (newEntries[index].isOccupied) {
+                attempt += 1;
+            }
+            newEntries[index].key = key;
+            newEntries[index].value = value;
+            newEntries[index].isOccupied = 1;
+        }
+    }
+
+    free(map->entries);
+    map->entries = newEntries;
+    map->size = newSize;
+}
+
+void resizeIntToStringMap(IntToStringMap *map) {
+    size_t newSize = map->size * 2;
+    StringToIntMapEntry *newEntries = (IntToStringMapEntry*) malloc(newSize * sizeof(IntToStringMapEntry));
+    if (newEntries == NULL) {
+        return;
+    }
+
+    for (size_t i = 0; i < newSize; i++) {
+        newEntries->isOccupied = 0;
+    }
+
+    for (size_t i = 0; i < map->size; i++) {
+        if (map->entries[i].isOccupied) {
+            int key = map->entries[i].key;
+            string *value = map->entries[i].value;
+            size_t hash = hashFunction(key, newSize);
             size_t attempt = 0;
             size_t index = quadraticProbe(hash, attempt, newSize);
             while (newEntries[index].isOccupied) {
@@ -124,12 +193,32 @@ void resizeIntMap(IntMap *map) {
     map->size = newSize;
 }
 
-void stringMapInsert(StringMap *map, string *key, int value) {
+void StringToIntMapInsert(StringToIntMap *map, string *key, int value) {
     if ((float) map->count / map->size >= map->loadFactor) {
-        resizeStringMap(map);
+        resizeStringToIntMap(map);
     }
 
     size_t hash = hashFunction(stringToInt(key), map->size);
+    size_t attempt = 0;
+    
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
+    }
+    
+    map->entries[index].key = key;
+    map->entries[index].value = value;
+    map->entries[index].isOccupied = 1;
+    map->count++;
+}
+
+void IntToStringMapInsert(IntToStringMap *map, int key, string* value) {
+    if ((float) map->count / map->size >= map->loadFactor) {
+        resizeStringToIntMap(map);
+    }
+
+    size_t hash = hashFunction(key, map->size);
     size_t attempt = 0;
     
     size_t index = quadraticProbe(hash, attempt, map->size);
@@ -164,7 +253,7 @@ void intMapInsert(IntMap *map, int key, int value) {
     map->count++;
 }
 
-int stringMapGet(StringMap *map, string *key) {
+int StringToIntMapGet(StringToIntMap *map, string *key) {
     size_t hash = hashFunction(stringToInt(key), map->size);
     size_t attempt = 0;
 
@@ -178,6 +267,22 @@ int stringMapGet(StringMap *map, string *key) {
     }
 
     return -1;
+}
+
+string *IntToStringMapGet(IntToStringMap *map, int key) {
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
+
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        if (compare(map->entries[index].key, key) == 1) {
+            return map->entries[index].value;
+        }
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
+    }
+
+    return NULL;
 }
 
 int intMapGet(IntMap *map, int key) {
@@ -196,7 +301,7 @@ int intMapGet(IntMap *map, int key) {
     return -1;
 }
 
-void stringMapDelete(StringMap *map, string *key) {
+void StringToIntMapDelete(StringToIntMap *map, string *key) {
     size_t hash = hashFunction(stringToInt(key), map->size);
     size_t attempt = 0;
 
@@ -211,6 +316,22 @@ void stringMapDelete(StringMap *map, string *key) {
         index = quadraticProbe(hash, attempt, map->size);
     }
 } 
+
+void IntToStringMapDelete(IntToStringMap *map, int key) {
+    size_t hash = hashFunction(key, map->size);
+    size_t attempt = 0;
+
+    size_t index = quadraticProbe(hash, attempt, map->size);
+    while (map->entries[index].isOccupied) {
+        if (compare(map->entries[index].key, key) == 1) {
+            map->entries[index].isOccupied = 0;
+            map->count--;
+            return;
+        }
+        attempt++;
+        index = quadraticProbe(hash, attempt, map->size);
+    }
+}
 
 void intMapDelete(IntMap *map, int key) {
     size_t hash = hashFunction(key, map->size);

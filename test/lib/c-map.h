@@ -8,7 +8,13 @@ typedef struct {
     string *key;
     int value;
     int isOccupied;
-} StringMapEntry;
+} StringToIntMapEntry;
+
+typedef struct {
+    int key;
+    string *value;
+    int isOccupied;
+} IntToStringMapEntry;
 
 typedef struct {
     int key;
@@ -20,8 +26,15 @@ typedef struct {
     size_t size;
     size_t count;
     float loadFactor;
-    StringMapEntry *entries;
-} StringMap;
+    StringToIntMapEntry *entries;
+} StringToIntMap;
+
+typedef struct {
+    size_t size;
+    size_t count;
+    float loadFactor;
+    IntToStringMapEntry *entries;
+} IntToStringMap;
 
 typedef struct {
     size_t size;
@@ -30,9 +43,17 @@ typedef struct {
     IntMapEntry *entries;
 } IntMap;
 
-StringMap *newStringMap(size_t size, float loadFactor);
+StringToIntMap *newStringToIntMap(size_t size, float loadFactor);
+
+IntToStringMap *newIntToStringMap(size_t size, float loadFactor);
 
 IntMap *newIntMap(size_t size, float loadFactor);
+
+void freeStringToIntMap(StringToIntMap *map);
+
+void freeIntToStringMap(IntToStringMap *map);
+
+void freeIntMap(IntMap *map);
 
 size_t quadraticProbe(size_t hash, size_t attempt, size_t size);
 
@@ -40,13 +61,21 @@ size_t hashFunction(int key, size_t size);
 
 int stringToInt(string *str);
 
-void resizeStringMap(StringMap *map);
+void resizeStringToIntMap(StringToIntMap *map);
 
-void stringMapInsert(StringMap *map, string *key, int value);
+void StringToIntMapInsert(StringToIntMap *map, string *key, int value);
 
-int stringMapGet(StringMap *map, string *key);
+int StringToIntMapGet(StringToIntMap *map, string *key);
 
-void stringMapDelete(StringMap *map, string *key);
+void StringToIntMapDelete(StringToIntMap *map, string *key);
+
+void resizeIntToStringMap(IntToStringMap *map);
+
+void IntToStringMapInsert(IntToStringMap *map, int key, string* value);
+
+string *IntToStringMapGet(IntToStringMap *map, int key);
+
+void IntToStringMapDelete(IntToStringMap *map, int key);
 
 void resizeIntMap(IntMap *map);
 

@@ -11,7 +11,7 @@ size_t hashFunction(int key, size_t size) {
 int stringToInt(string *str) {
     int result = 0;
     for (size_t i = 0; i < str->length; i++) {
-        result += (int) str->str[i];
+        result = result * 31 + (int)str->str[i];
     }
     return result;
 }
